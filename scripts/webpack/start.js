@@ -48,7 +48,7 @@ choosePort(HOST, PORT)
       },
     });
 
-    server.listen(PORT, HOST, () => {
+    server.listen(port, HOST, () => {
       const url = `http://${HOST}:${PORT}`;
       console.log(
         `${chalk.greenBright('→ Server listening on')} ${chalk.blueBright(
