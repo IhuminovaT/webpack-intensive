@@ -8,39 +8,65 @@
  */
 
 // Core
-const webpack = require('webpack');
-const getConfig = require('./config/webpack.config');
-const chalk = require('chalk');
-const devServer = require('webpack-dev-server');
-const hot = require('webpack-hot-middleware');
+import webpack from 'webpack';
+import chalk from 'chalk';
+import DevServer from 'webpack-dev-server';
+import hot from 'webpack-hot-middleware';
+import openBrowser from 'react-dev-utils/openBrowser';
+
+import {
+  choosePort,
+  createCompiler,
+  prepareProxy,
+  prepareUrls,
+} from 'react-dev-utils/WebpackDevServerUtils';
+
+// Constants
+import { HOST, PORT } from './constants';
+
+// Config
+import getConfig from './config/webpack.dev';
 
 const compiler = webpack(getConfig());
 
-// Constants
-const { HOST, PORT } = require('./constans');
+choosePort(HOST, PORT)
+  .then(port => {
+    if (port == null) {
+      // We have not found a port.
+      return;
+    }
 
-const server = new devServer(compiler, {
-  host:               HOST,
-  port:               PORT,
-  historyApiFallback: true,
-  overlay:            true,
-  quiet:              true,
-  clientLogLevel:     'none',
-  noInfo:             true,
-  after:              (app) => {
-    app.use(
-      hot(compiler, {
-        log: false,
-      })
-    )
-  },
-  open:               true,
-});
+    const server = new DevServer(compiler, {
+      host:               HOST,
+      port:               PORT,
+      historyApiFallback: true,
+      overlay:            true,
+      quiet:              true,
+      clientLogLevel:     'none',
+      noInfo:             true,
+      after:              (app) => {
+        app.use(
+          hot(compiler, {
+            log: false,
+          }),
+        );
+      },
+    });
 
-server.listen(PORT, HOST, () => {
-  console.log(
-    `${chalk.greenBright('-> Server listening on')} ${chalk.blueBright(
-      `http://${HOST}:${PORT}`,
-    )}`
-  );
-});
+    server.listen(PORT, HOST, () => {
+      const url = `http://${HOST}:${PORT}`;
+      console.log(
+        `${chalk.greenBright('→ Server listening on')} ${chalk.blueBright(
+          url,
+        )}`,
+      );
+
+      openBrowser(url);
+    });
+  })
+  .catch(err => {
+    if (err && err.message) {
+      console.log(err.message);
+    }
+    process.exit(1);
+  });

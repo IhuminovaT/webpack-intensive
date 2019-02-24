@@ -9,5 +9,5 @@ exports.BUILD   = resolve(PROJECT_ROOT, './build');
 exports.STATIC  = resolve(PROJECT_ROOT, './static');
 
 // Network
-exports.HOST = 'localhost';
+exports.HOST = '127.0.0.1';
 exports.PORT = 3002;
