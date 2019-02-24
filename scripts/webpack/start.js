@@ -14,12 +14,7 @@ import DevServer from 'webpack-dev-server';
 import hot from 'webpack-hot-middleware';
 import openBrowser from 'react-dev-utils/openBrowser';
 
-import {
-  choosePort,
-  createCompiler,
-  prepareProxy,
-  prepareUrls,
-} from 'react-dev-utils/WebpackDevServerUtils';
+import { choosePort } from 'react-dev-utils/WebpackDevServerUtils';
 
 // Constants
 import { HOST, PORT } from './constants';
